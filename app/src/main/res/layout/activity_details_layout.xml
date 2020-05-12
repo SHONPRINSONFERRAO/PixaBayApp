@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="data" type="com.apps.pixabayapp.data.model.DetailsData"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="6sp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/imageCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:scaleType="centerCrop"
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="280dp" />
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_marginTop="10sp"
+            android:padding="6sp"
+            app:cardCornerRadius="8sp"
+            app:layout_constraintTop_toBottomOf="@+id/imageCard"
+            android:id="@+id/commentView"
+            app:cardUseCompatPadding="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp">
+
+                <ImageView
+                    android:id="@+id/commentImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_comments"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/commentsTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20sp"
+                    android:text="Comments"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toTopOf="@+id/comments"
+                    app:layout_constraintStart_toEndOf="@+id/commentImg"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:text="@{data.comments}"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="20sp"
+                    android:id="@+id/comments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/commentImg"
+                    app:layout_constraintTop_toBottomOf="@+id/commentsTxt" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:padding="6sp"
+            app:cardCornerRadius="8sp"
+            app:layout_constraintTop_toBottomOf="@+id/commentView"
+            android:id="@+id/likesView"
+            app:cardUseCompatPadding="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp">
+
+                <ImageView
+                    android:id="@+id/likesImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_likes"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/likesTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20sp"
+                    android:text="Likes"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toTopOf="@+id/likes"
+                    app:layout_constraintStart_toEndOf="@+id/likesImg"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:text="@{data.likes}"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="20sp"
+                    android:id="@+id/likes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/likesImg"
+                    app:layout_constraintTop_toBottomOf="@+id/likesTxt" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:padding="6sp"
+            app:cardCornerRadius="8sp"
+            app:layout_constraintTop_toBottomOf="@+id/likesView"
+            android:id="@+id/viewsView"
+            app:cardUseCompatPadding="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp">
+
+                <ImageView
+                    android:id="@+id/viewsImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_views"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/viewsTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20sp"
+                    android:text="Views"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toTopOf="@+id/views"
+                    app:layout_constraintStart_toEndOf="@+id/viewsImg"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:text="@{data.views}"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="20sp"
+                    android:id="@+id/views"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/viewsImg"
+                    app:layout_constraintTop_toBottomOf="@+id/viewsTxt" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:padding="6sp"
+            app:cardCornerRadius="8sp"
+            app:layout_constraintTop_toBottomOf="@+id/viewsView"
+            android:id="@+id/downloadsView"
+            app:cardUseCompatPadding="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp">
+
+                <ImageView
+                    android:id="@+id/downloadsImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_downloads"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/downloadsTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20sp"
+                    android:text="Downloads"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toTopOf="@+id/downloads"
+                    app:layout_constraintStart_toEndOf="@+id/downloadsImg"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:text="@{data.downloads}"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="20sp"
+                    android:id="@+id/downloads"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/downloadsImg"
+                    app:layout_constraintTop_toBottomOf="@+id/downloadsTxt" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+
+
+        <androidx.cardview.widget.CardView
+            android:padding="6sp"
+            app:cardCornerRadius="8sp"
+            app:layout_constraintTop_toBottomOf="@+id/downloadsView"
+            android:id="@+id/favView"
+            app:cardUseCompatPadding="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp">
+
+                <ImageView
+                    android:id="@+id/favImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_favorites"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/favTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20sp"
+                    android:text="Favorites"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toTopOf="@+id/fav"
+                    app:layout_constraintStart_toEndOf="@+id/favImg"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:text="@{data.favorites}"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="20sp"
+                    android:id="@+id/fav"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/favImg"
+                    app:layout_constraintTop_toBottomOf="@+id/favTxt" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

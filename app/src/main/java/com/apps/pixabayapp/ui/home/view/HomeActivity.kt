@@ -1,5 +1,6 @@
 package com.apps.pixabayapp.ui.home.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,14 +14,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.apps.pixabayapp.R
 import com.apps.pixabayapp.data.api.ApiHelper
 import com.apps.pixabayapp.data.api.RetrofitBuilder
+import com.apps.pixabayapp.data.model.DetailsData
+import com.apps.pixabayapp.data.model.ListOfPhotos
 import com.apps.pixabayapp.data.model.PhotoDataModel
 import com.apps.pixabayapp.ui.base.ViewModelFactory
+import com.apps.pixabayapp.ui.details.view.DetailsActivity
 import com.apps.pixabayapp.ui.home.adapter.PhotoAdapter
 import com.apps.pixabayapp.ui.home.viewmodel.HomeViewModel
 import com.apps.pixabayapp.utils.Status
 import kotlinx.android.synthetic.main.activity_main.*
 
-class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
+class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
+    PhotoAdapter.OnItemClickListener {
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var adapter: PhotoAdapter
@@ -47,7 +52,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     private fun setupUI() {
 
-        adapter = PhotoAdapter(arrayListOf())
+        adapter = PhotoAdapter(arrayListOf(), this)
 
         photoView.layoutManager = GridLayoutManager(this, 2)
         photoView.adapter = adapter
@@ -141,6 +146,20 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     override fun onQueryTextChange(newText: String?): Boolean {
         return false
+    }
+
+    override fun onItemClick(item: ListOfPhotos) {
+        val detailsData: DetailsData = DetailsData(
+            item.comments,
+            item.webformatURL,
+            item.views,
+            item.favorites,
+            item.downloads,
+            item.likes,
+            item.previewURL
+        )
+        val intent: Intent = Intent(this, DetailsActivity::class.java)
+        startActivity(intent.putExtra("details", detailsData))
     }
 
 }
