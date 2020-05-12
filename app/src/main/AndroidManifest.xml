@@ -14,13 +14,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.apps.pixabayapp.ui.details.view.DetailsActivity">
+        <activity android:name="com.apps.pixabayapp.ui.home.view.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.apps.pixabayapp.ui.details.view.DetailsActivity"/>
     </application>
 
 </manifest>
