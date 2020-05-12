@@ -2,12 +2,13 @@ package com.apps.pixabayapp.ui.home.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.apps.pixabayapp.utils.Resource
 import androidx.lifecycle.liveData
+import com.apps.pixabayapp.MyApplication
 import com.apps.pixabayapp.data.repository.PicsRepository
+import com.apps.pixabayapp.utils.Resource
 import kotlinx.coroutines.Dispatchers
 
-class HomeViewModel (val picsRepo: PicsRepository) : ViewModel() {
+class HomeViewModel(private val picsRepo: PicsRepository) : ViewModel() {
     init {
         Log.i("HomeViewModel", "HomeViewModel created!")
     }
@@ -17,12 +18,16 @@ class HomeViewModel (val picsRepo: PicsRepository) : ViewModel() {
         Log.i("HomeViewModel", "HomeViewModel destroyed!")
     }
 
-    fun getUsers() = liveData(Dispatchers.IO) {
+    fun getUsers(query: String, page: Int) = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
-            emit(Resource.success(data = picsRepo.getUsers()))
+            emit(Resource.success(data = picsRepo.getUsers(query, page)))
         } catch (exception: Exception) {
-            emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
+            if (!MyApplication.hasNetwork()) {
+                emit(Resource.noContentFound(data = null, message = "No Content Found" ))
+            } else {
+                emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
+            }
         }
     }
 }

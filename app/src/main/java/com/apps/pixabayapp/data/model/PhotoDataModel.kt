@@ -12,6 +12,7 @@ data class ListOfPhotos (
     val fullHDURL: String,
     val previewURL: String,
     val views: String,
+    val webformatURL: String,
     val downloads: String,
     val favorites: String,
     val likes: String,

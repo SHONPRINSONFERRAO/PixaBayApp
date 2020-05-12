@@ -4,5 +4,5 @@ import com.apps.pixabayapp.data.model.PhotoDataModel
 
 class ApiHelper(private val apiService: ApiService) {
 
-    suspend fun getUsers(query: String): PhotoDataModel = apiService.getUsers(query)
+    suspend fun getUsers(query: String, page: Int): PhotoDataModel = apiService.getUsers(query, page)
 }

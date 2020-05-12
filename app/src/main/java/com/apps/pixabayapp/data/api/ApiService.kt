@@ -7,5 +7,5 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET("/api")
-    suspend fun getUsers(@Query("q") query: String): PhotoDataModel
+    suspend fun getUsers(@Query("q") query: String, @Query("page") page: Int): PhotoDataModel
 }
