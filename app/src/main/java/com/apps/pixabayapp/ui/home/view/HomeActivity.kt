@@ -16,13 +16,13 @@ import com.apps.pixabayapp.data.api.RetrofitBuilder
 import com.apps.pixabayapp.data.model.PhotoDataModel
 import com.apps.pixabayapp.ui.base.ViewModelFactory
 import com.apps.pixabayapp.ui.home.adapter.PhotoAdapter
-import com.apps.pixabayapp.ui.details.viewmodel.DetailsViewModel
+import com.apps.pixabayapp.ui.home.viewmodel.HomeViewModel
 import com.apps.pixabayapp.utils.Status
 import kotlinx.android.synthetic.main.activity_main.*
 
 class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
-    private lateinit var viewModel: DetailsViewModel
+    private lateinit var viewModel: HomeViewModel
     private lateinit var adapter: PhotoAdapter
     private var isLoading = false
     private lateinit var query: String
@@ -77,7 +77,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     private fun setupViewModel() {
         viewModel =
             ViewModelProviders.of(this, ViewModelFactory(ApiHelper(RetrofitBuilder.apiService)))
-                .get(DetailsViewModel::class.java)
+                .get(HomeViewModel::class.java)
         Log.i("HomeACtivity", "Called ViewModelProviders.of")
     }
 
