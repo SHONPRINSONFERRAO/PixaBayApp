@@ -1,25 +1,51 @@
 package com.apps.pixabayapp
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
+import com.apps.pixabayapp.data.api.ApiHelper
+import com.apps.pixabayapp.data.model.ListOfPhotos
+import com.apps.pixabayapp.data.model.PhotoDataModel
 import com.apps.pixabayapp.data.repository.PicsRepository
 import com.apps.pixabayapp.ui.home.viewmodel.HomeViewModel
+import com.apps.pixabayapp.utils.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
+import okhttp3.Response
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
+import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
+import org.mockito.junit.MockitoJUnitRunner
+import java.util.*
+
 
 @ExperimentalCoroutinesApi
-@ExtendWith(InstantExecutorExtension::class)
+@RunWith(MockitoJUnitRunner::class)
 class HomeTest {
+
+
     private lateinit var viewModel: HomeViewModel
+
+    @get:Rule
+    val testInstantTaskExecutorRule: TestRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    val testCoroutineRule = TestCoroutineRule()
 
     @Mock
     private lateinit var repository: PicsRepository
+
+    @Mock
+    private lateinit var helper: ApiHelper
+
+    @Mock
+    private lateinit var apiUsersObserver: Observer<Resource<PhotoDataModel>>
 
     private val testCoroutineDispatcher = TestCoroutineDispatcher()
 
@@ -43,7 +69,7 @@ class HomeTest {
         viewModel.getUsers(searchQuery, page)
 
         // Validation
-        Mockito.verify(repository, Mockito.never()).getUsers(searchQuery, page)
+        Mockito.verify(helper, Mockito.never()).getUsers(searchQuery, page)
     }
 
     @Test
@@ -55,7 +81,26 @@ class HomeTest {
         val data = viewModel.getUsers(searchQuery, page)
 
         // Validation
-        Mockito.verify(repository, Mockito.times(1)).getUsers(searchQuery,page)
+        Mockito.verify(viewModel, Mockito.times(1)).getUsers(searchQuery,page)
     }
+
+    @Test
+    fun test_PixaBayRepos_success_query_load_page() = testCoroutineDispatcher.runBlockingTest {
+        val searchQuery: String = "apple"
+        val page:  Int = 1
+
+        // Trigger
+        viewModel.getUsers(searchQuery, page)
+
+
+        // Validation
+        Mockito.verify(viewModel, Mockito.times(1)).getUsers(searchQuery,page)
+
+        //paginate
+        viewModel.getUsers(searchQuery, page)
+        // Validation
+        Mockito.verify(viewModel, Mockito.times(2)).getUsers(searchQuery,page)
+    }
+
 
 }
