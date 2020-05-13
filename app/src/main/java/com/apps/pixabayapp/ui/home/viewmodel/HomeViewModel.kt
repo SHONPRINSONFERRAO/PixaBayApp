@@ -24,7 +24,7 @@ class HomeViewModel(private val picsRepo: PicsRepository) : ViewModel() {
             emit(Resource.success(data = picsRepo.getUsers(query, page)))
         } catch (exception: Exception) {
             if (!MyApplication.hasNetwork()) {
-                emit(Resource.noContentFound(data = null, message = "No Content Found" ))
+                emit(Resource.noContentFound(data = null, message = "No Content Found"))
             } else {
                 emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
             }
