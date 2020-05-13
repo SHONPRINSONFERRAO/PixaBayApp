@@ -3,6 +3,10 @@ package com.apps.pixabayapp
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
+import com.apps.pixabayapp.di.component.ApiComponent
+import com.apps.pixabayapp.di.component.DaggerApiComponent
+import com.apps.pixabayapp.di.module.ApiModule
+import com.apps.pixabayapp.di.module.AppModule
 
 
 class MyApplication : Application() {
@@ -12,7 +16,18 @@ class MyApplication : Application() {
         if (instance == null) {
             instance = this
         }
+        mApiComponent = DaggerApiComponent.builder()
+            .appModule(AppModule(this))
+            .apiModule(ApiModule)
+            .build();
     }
+
+
+    fun getNetComponent(): ApiComponent {
+        return mApiComponent
+    }
+
+
 
     fun getInstance(): MyApplication? {
         return instance
@@ -30,6 +45,8 @@ class MyApplication : Application() {
     companion object {
         var instance: MyApplication? = null
             private set
+
+        private lateinit var mApiComponent: ApiComponent
 
         fun hasNetwork(): Boolean {
             return instance!!.isNetworkConnected

@@ -11,9 +11,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.apps.pixabayapp.MyApplication
 import com.apps.pixabayapp.R
 import com.apps.pixabayapp.data.api.ApiHelper
-import com.apps.pixabayapp.data.api.RetrofitBuilder
+import com.apps.pixabayapp.data.api.ApiService
 import com.apps.pixabayapp.data.model.DetailsData
 import com.apps.pixabayapp.data.model.ListOfPhotos
 import com.apps.pixabayapp.data.model.PhotoDataModel
@@ -23,6 +24,8 @@ import com.apps.pixabayapp.ui.home.adapter.PhotoAdapter
 import com.apps.pixabayapp.ui.home.viewmodel.HomeViewModel
 import com.apps.pixabayapp.utils.Status
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
+
 
 class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
     PhotoAdapter.OnItemClickListener {
@@ -34,9 +37,14 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
 
     private var page: Int = 1
 
+    @Inject
+    lateinit var apiService: ApiService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        (application as MyApplication).getNetComponent().inject(this)
         setupViewModel()
         setupUI()
         //setupObservers("apple")
@@ -81,7 +89,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
 
     private fun setupViewModel() {
         viewModel =
-            ViewModelProviders.of(this, ViewModelFactory(ApiHelper(RetrofitBuilder.apiService)))
+            ViewModelProviders.of(this, ViewModelFactory(ApiHelper(apiService)))
                 .get(HomeViewModel::class.java)
         Log.i("HomeACtivity", "Called ViewModelProviders.of")
     }

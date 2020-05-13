@@ -1,16 +1,20 @@
-package com.apps.pixabayapp.data.api
+package com.apps.pixabayapp.di.module
 
 import android.util.Log
 import com.apps.pixabayapp.MyApplication
+import com.apps.pixabayapp.data.api.ApiService
+import dagger.Module
+import dagger.Provides
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
-
-object RetrofitBuilder {
+@Module
+object ApiModule {
 
     private const val BASE_URL = "https://pixabay.com/"
     private const val TAG = "ApiService"
@@ -20,7 +24,15 @@ object RetrofitBuilder {
     private const val cacheSize = 10 * 1024 * 1024 // 5 MB
         .toLong()
 
-    private fun getRetrofit(): Retrofit {
+    @Provides
+    @Singleton
+    fun getApiInterface(retroFit: Retrofit): ApiService {
+        return retroFit.create<ApiService>(ApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun getRetrofit(): Retrofit {
 
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -29,28 +41,9 @@ object RetrofitBuilder {
             .build()
     }
 
-    /*private fun client(): OkHttpClient {
-        val logging = HttpLoggingInterceptor()
-        logging.level = HttpLoggingInterceptor.Level.BODY
-        val httpClient = OkHttpClient.Builder()
-        httpClient.addInterceptor(logging)
-        httpClient.addInterceptor { chain ->
-            val original: Request = chain.request()
-            val originalHttpUrl: HttpUrl = original.url()
-            val url = originalHttpUrl.newBuilder()
-                .addQueryParameter("key", "16493408-1f01543c145d09e4208784e1f")
-                .build()
-
-            // Request customization: add request headers
-            val requestBuilder: Request.Builder = original.newBuilder()
-                .url(url)
-            val request: Request = requestBuilder.build()
-            chain.proceed(request)
-        }
-        return httpClient.build()
-    }*/
-
-    private fun okHttpClient(): OkHttpClient? {
+    @Provides
+    @Singleton
+    fun okHttpClient(): OkHttpClient? {
         return OkHttpClient.Builder()
             .cache(cache())
             .addInterceptor(httpLoggingInterceptor()) // used if network off OR on
@@ -60,7 +53,9 @@ object RetrofitBuilder {
             .build()
     }
 
-    private fun addQueryParameter(): Interceptor {
+    @Provides
+    @Singleton
+    fun addQueryParameter(): Interceptor {
         return Interceptor {chain ->
             val original: Request = chain.request()
             val originalHttpUrl: HttpUrl = original.url()
@@ -76,17 +71,22 @@ object RetrofitBuilder {
         }
     }
 
-    val apiService: ApiService = getRetrofit().create(ApiService::class.java)
+    //val apiService: ApiService = getRetrofit()
+    //    .create(ApiService::class.java)
 
-    private fun cache(): Cache? {
-        return Cache(File(MyApplication.instance?.cacheDir, "someIdentifier"), cacheSize)
+    @Provides
+    @Singleton
+    fun cache(): Cache? {
+        return Cache(File(MyApplication.instance?.cacheDir, "someIdentifier"),
+            cacheSize
+        )
     }
 
-    /**
-     * This interceptor will be called both if the network is available and if the network is not available
-     * @return
-     */
-    private fun offlineInterceptor(): Interceptor? {
+
+
+    @Provides
+    @Singleton
+    fun offlineInterceptor(): Interceptor? {
         return Interceptor { chain ->
             Log.d(TAG, "offline interceptor: called.")
             var request: Request = chain.request()
@@ -106,11 +106,11 @@ object RetrofitBuilder {
         }
     }
 
-    /**
-     * This interceptor will be called ONLY if the network is available
-     * @return
-     */
-    private fun networkInterceptor(): Interceptor? {
+
+
+    @Provides
+    @Singleton
+    fun networkInterceptor(): Interceptor? {
         return Interceptor { chain ->
             Log.d(TAG, "network interceptor: called.")
             val response: Response = chain.proceed(chain.request())
@@ -125,7 +125,9 @@ object RetrofitBuilder {
         }
     }
 
-    private fun httpLoggingInterceptor(): HttpLoggingInterceptor? {
+    @Provides
+    @Singleton
+    fun httpLoggingInterceptor(): HttpLoggingInterceptor? {
         val httpLoggingInterceptor =
             HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
                 Log.d(
