@@ -1,6 +1,6 @@
 package com.apps.pixabayapp.data.model
 
-data class DetailsData (
+data class DetailsData(
     val comments: String,
     val url: String,
     val views: String,
@@ -8,4 +8,4 @@ data class DetailsData (
     val downloads: String,
     val likes: String,
     val thumbnail: String
-): java.io.Serializable
+) : java.io.Serializable

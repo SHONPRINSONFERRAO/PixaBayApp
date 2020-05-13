@@ -3,38 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="data" type="com.apps.pixabayapp.data.model.DetailsData"/>
+
+        <variable
+            name="data"
+            type="com.apps.pixabayapp.data.model.DetailsData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="10dp">
 
         <androidx.cardview.widget.CardView
-            app:cardBackgroundColor="@android:color/white"
-            app:cardCornerRadius="6sp"
-            app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/imageCard"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="6sp"
+            app:layout_constraintTop_toTopOf="parent">
+
             <ImageView
-                android:scaleType="centerCrop"
                 android:id="@+id/image"
                 android:layout_width="match_parent"
-                android:layout_height="280dp" />
+                android:layout_height="280dp"
+                android:scaleType="centerCrop" />
         </androidx.cardview.widget.CardView>
 
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/commentView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10sp"
             android:padding="6sp"
             app:cardCornerRadius="8sp"
-            app:layout_constraintTop_toBottomOf="@+id/imageCard"
-            android:id="@+id/commentView"
             app:cardUseCompatPadding="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            app:layout_constraintTop_toBottomOf="@+id/imageCard">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -62,13 +66,13 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:text="@{data.comments}"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="20sp"
                     android:id="@+id/comments"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="20sp"
+                    android:text="@{data.comments}"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/commentImg"
                     app:layout_constraintTop_toBottomOf="@+id/commentsTxt" />
@@ -77,13 +81,13 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/likesView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:padding="6sp"
             app:cardCornerRadius="8sp"
-            app:layout_constraintTop_toBottomOf="@+id/commentView"
-            android:id="@+id/likesView"
             app:cardUseCompatPadding="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            app:layout_constraintTop_toBottomOf="@+id/commentView">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -111,13 +115,13 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:text="@{data.likes}"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="20sp"
                     android:id="@+id/likes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="20sp"
+                    android:text="@{data.likes}"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/likesImg"
                     app:layout_constraintTop_toBottomOf="@+id/likesTxt" />
@@ -126,13 +130,13 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/viewsView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:padding="6sp"
             app:cardCornerRadius="8sp"
-            app:layout_constraintTop_toBottomOf="@+id/likesView"
-            android:id="@+id/viewsView"
             app:cardUseCompatPadding="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            app:layout_constraintTop_toBottomOf="@+id/likesView">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -160,13 +164,13 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:text="@{data.views}"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="20sp"
                     android:id="@+id/views"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="20sp"
+                    android:text="@{data.views}"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/viewsImg"
                     app:layout_constraintTop_toBottomOf="@+id/viewsTxt" />
@@ -175,13 +179,13 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/downloadsView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:padding="6sp"
             app:cardCornerRadius="8sp"
-            app:layout_constraintTop_toBottomOf="@+id/viewsView"
-            android:id="@+id/downloadsView"
             app:cardUseCompatPadding="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            app:layout_constraintTop_toBottomOf="@+id/viewsView">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -209,13 +213,13 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:text="@{data.downloads}"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="20sp"
                     android:id="@+id/downloads"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="20sp"
+                    android:text="@{data.downloads}"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/downloadsImg"
                     app:layout_constraintTop_toBottomOf="@+id/downloadsTxt" />
@@ -224,16 +228,14 @@
         </androidx.cardview.widget.CardView>
 
 
-
-
         <androidx.cardview.widget.CardView
+            android:id="@+id/favView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:padding="6sp"
             app:cardCornerRadius="8sp"
-            app:layout_constraintTop_toBottomOf="@+id/downloadsView"
-            android:id="@+id/favView"
             app:cardUseCompatPadding="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            app:layout_constraintTop_toBottomOf="@+id/downloadsView">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -261,13 +263,13 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:text="@{data.favorites}"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="20sp"
                     android:id="@+id/fav"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="20sp"
+                    android:text="@{data.favorites}"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/favImg"
                     app:layout_constraintTop_toBottomOf="@+id/favTxt" />

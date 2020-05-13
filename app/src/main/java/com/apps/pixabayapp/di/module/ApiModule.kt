@@ -56,7 +56,7 @@ object ApiModule {
     @Provides
     @Singleton
     fun addQueryParameter(): Interceptor {
-        return Interceptor {chain ->
+        return Interceptor { chain ->
             val original: Request = chain.request()
             val originalHttpUrl: HttpUrl = original.url()
             val url = originalHttpUrl.newBuilder()
@@ -77,11 +77,11 @@ object ApiModule {
     @Provides
     @Singleton
     fun cache(): Cache? {
-        return Cache(File(MyApplication.instance?.cacheDir, "someIdentifier"),
+        return Cache(
+            File(MyApplication.instance?.cacheDir, "someIdentifier"),
             cacheSize
         )
     }
-
 
 
     @Provides
@@ -105,7 +105,6 @@ object ApiModule {
             chain.proceed(request)
         }
     }
-
 
 
     @Provides

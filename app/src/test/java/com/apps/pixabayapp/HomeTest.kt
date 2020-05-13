@@ -59,7 +59,7 @@ class HomeTest {
     @Test
     fun test_PixaBayRepos_noQuery() = testCoroutineDispatcher.runBlockingTest {
         val searchQuery: String = ""
-        val page:  Int = 1
+        val page: Int = 1
 
         // Trigger
         viewModel.getUsers(searchQuery, page)
@@ -71,37 +71,37 @@ class HomeTest {
     @Test
     fun test_PixaBayRepos_success_query() = testCoroutineDispatcher.runBlockingTest {
         val searchQuery: String = "apple"
-        val page:  Int = 1
+        val page: Int = 1
 
         // Trigger
         val data = viewModel.getUsers(searchQuery, page)
 
         // Validation
-        Mockito.verify(viewModel, Mockito.times(1)).getUsers(searchQuery,page)
+        Mockito.verify(viewModel, Mockito.times(1)).getUsers(searchQuery, page)
     }
 
     @Test
     fun test_PixaBayRepos_success_query_load_page() = testCoroutineDispatcher.runBlockingTest {
         val searchQuery: String = "apple"
-        val page:  Int = 1
+        val page: Int = 1
 
         // Trigger
         viewModel.getUsers(searchQuery, page)
 
 
         // Validation
-        Mockito.verify(viewModel, Mockito.times(1)).getUsers(searchQuery,page)
+        Mockito.verify(viewModel, Mockito.times(1)).getUsers(searchQuery, page)
 
         //paginate
         viewModel.getUsers(searchQuery, page)
         // Validation
-        Mockito.verify(viewModel, Mockito.times(2)).getUsers(searchQuery,page)
+        Mockito.verify(viewModel, Mockito.times(2)).getUsers(searchQuery, page)
     }
 
     @Test
     fun test_PixaBayRepos_success_query_verify_data() = testCoroutineDispatcher.runBlockingTest {
         val searchQuery: String = "apple"
-        val page:  Int = 1
+        val page: Int = 1
 
         // Trigger
         viewModel.getUsers(searchQuery, page)
@@ -111,7 +111,7 @@ class HomeTest {
     @Test
     fun test_PixaBayRepos_success_query_verify() = testCoroutineDispatcher.runBlockingTest {
         val searchQuery: String = "apple"
-        val page:  Int = 1
+        val page: Int = 1
 
         val response =
             Mockito.mock(Response::class.java)

@@ -28,7 +28,6 @@ class MyApplication : Application() {
     }
 
 
-
     fun getInstance(): MyApplication? {
         return instance
     }

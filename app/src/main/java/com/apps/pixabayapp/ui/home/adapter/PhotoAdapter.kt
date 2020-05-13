@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.apps.pixabayapp.R
 import com.apps.pixabayapp.data.model.ListOfPhotos
-import com.apps.pixabayapp.data.model.PhotoDataModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.photo_layout.view.*
 
-class PhotoAdapter(private val photos: ArrayList<ListOfPhotos>,
-                   private val itemClickListener: OnItemClickListener) : RecyclerView.Adapter<PhotoAdapter.DataViewHolder>() {
+class PhotoAdapter(
+    private val photos: ArrayList<ListOfPhotos>,
+    private val itemClickListener: OnItemClickListener
+) : RecyclerView.Adapter<PhotoAdapter.DataViewHolder>() {
 
     class DataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -37,7 +38,9 @@ class PhotoAdapter(private val photos: ArrayList<ListOfPhotos>,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataViewHolder =
-        DataViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.photo_layout, parent, false))
+        DataViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.photo_layout, parent, false)
+        )
 
     override fun getItemCount(): Int = photos.size
 
