@@ -1,2 +1,2 @@
-rootProject.name='PixaBay App'
+rootProject.name = 'PixaBay App'
 include ':app'

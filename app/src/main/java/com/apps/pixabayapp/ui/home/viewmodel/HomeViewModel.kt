@@ -1,14 +1,17 @@
 package com.apps.pixabayapp.ui.home.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.apps.pixabayapp.MyApplication
-import com.apps.pixabayapp.data.repository.PicsRepository
+import com.apps.pixabayapp.data.api.ApiHelper
+import com.apps.pixabayapp.data.model.PhotoDataModel
 import com.apps.pixabayapp.utils.Resource
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class HomeViewModel(private val picsRepo: PicsRepository) : ViewModel() {
+class HomeViewModel(private val apiHelper: ApiHelper) : ViewModel() {
     init {
         Log.i("HomeViewModel", "HomeViewModel created!")
     }
@@ -18,16 +21,27 @@ class HomeViewModel(private val picsRepo: PicsRepository) : ViewModel() {
         Log.i("HomeViewModel", "HomeViewModel destroyed!")
     }
 
-    fun getUsers(query: String, page: Int) = liveData(Dispatchers.IO) {
-        emit(Resource.loading(data = null))
+    private val photos = MutableLiveData<Resource<PhotoDataModel>>()
+
+    fun fetchPhotos(query: String, page: Int) = viewModelScope.launch {
+        photos.postValue(Resource.loading(data = null))
         try {
-            emit(Resource.success(data = picsRepo.getUsers(query, page)))
+            photos.postValue(Resource.success(data = apiHelper.fetchPhotos(query, page)))
         } catch (exception: Exception) {
             if (!MyApplication.hasNetwork()) {
-                emit(Resource.noContentFound(data = null, message = "No Content Found"))
+                photos.postValue(Resource.noContentFound(data = null, message = "No Content Found"))
             } else {
-                emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
+                photos.postValue(
+                    Resource.error(
+                        data = null,
+                        message = exception.message ?: "Error Occurred!"
+                    )
+                )
             }
         }
     }
+
+    fun getUsers(): LiveData<Resource<PhotoDataModel>> = photos
+
+
 }

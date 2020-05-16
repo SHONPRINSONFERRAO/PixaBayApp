@@ -1,5 +1,6 @@
 package com.apps.pixabayapp
 
+import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.apps.pixabayapp.data.api.ApiHelper
@@ -11,7 +12,6 @@ import com.apps.pixabayapp.utils.Status
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
-import okhttp3.Response
 import org.junit.*
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
@@ -48,7 +48,7 @@ class HomeTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        viewModel = Mockito.spy(HomeViewModel(repository));
+        viewModel = Mockito.spy(HomeViewModel(repository))
     }
 
     @After
@@ -62,10 +62,10 @@ class HomeTest {
         val page: Int = 1
 
         // Trigger
-        viewModel.getUsers(searchQuery, page)
+        viewModel.fetchPhotos(searchQuery, page)
 
         // Validation
-        Mockito.verify(helper, Mockito.never()).getUsers(searchQuery, page)
+        Mockito.verify(helper, Mockito.never()).fetchPhotos(searchQuery, page)
     }
 
     @Test
@@ -74,10 +74,10 @@ class HomeTest {
         val page: Int = 1
 
         // Trigger
-        val data = viewModel.getUsers(searchQuery, page)
+        val data = viewModel.fetchPhotos(searchQuery, page)
 
         // Validation
-        Mockito.verify(viewModel, Mockito.times(1)).getUsers(searchQuery, page)
+        Mockito.verify(viewModel, Mockito.times(1)).fetchPhotos(searchQuery, page)
     }
 
     @Test
@@ -86,16 +86,16 @@ class HomeTest {
         val page: Int = 1
 
         // Trigger
-        viewModel.getUsers(searchQuery, page)
+        viewModel.fetchPhotos(searchQuery, page)
 
 
         // Validation
-        Mockito.verify(viewModel, Mockito.times(1)).getUsers(searchQuery, page)
+        Mockito.verify(viewModel, Mockito.times(1)).fetchPhotos(searchQuery, page)
 
         //paginate
-        viewModel.getUsers(searchQuery, page)
+        viewModel.fetchPhotos(searchQuery, page)
         // Validation
-        Mockito.verify(viewModel, Mockito.times(2)).getUsers(searchQuery, page)
+        Mockito.verify(viewModel, Mockito.times(2)).fetchPhotos(searchQuery, page)
     }
 
     @Test
@@ -104,7 +104,7 @@ class HomeTest {
         val page: Int = 1
 
         // Trigger
-        viewModel.getUsers(searchQuery, page)
+        viewModel.fetchPhotos(searchQuery, page)
 
     }
 
@@ -113,19 +113,32 @@ class HomeTest {
         val searchQuery: String = "apple"
         val page: Int = 1
 
-        val response =
-            Mockito.mock(Response::class.java)
-        val searchResponse: PhotoDataModel =
-            Mockito.mock<PhotoDataModel>(PhotoDataModel::class.java)
-        Mockito.doReturn(true).`when`(response).isSuccessful
-        Mockito.doReturn(searchResponse).`when`(response).body()
+       // Mockito.`when`(repository.fetchPhotos(searchQuery, page)).thenReturn(getSuccessResponse())
+
+        /* val response =
+             Mockito.mock(Response::class.java)
+         val searchResponse: PhotoDataModel =
+             Mockito.mock<PhotoDataModel>(PhotoDataModel::class.java)
+         Mockito.doReturn(true).`when`(response).isSuccessful
+         Mockito.doReturn(searchResponse).`when`(response).body()*/
 
         // Trigger
-        val data = viewModel.getUsers(searchQuery, page)
-
-        Assert.assertEquals(Status.SUCCESS, data.value?.status)
+        val data = viewModel.fetchPhotos(searchQuery, page)
+        Log.i("data", data.toString())
+        Assert.assertEquals(Status.SUCCESS, viewModel.getUsers().value?.status)
 
     }
 
+    @Test
+    fun test_PixaBayRepos_fail_query_verify() = testCoroutineDispatcher.runBlockingTest {
+        val searchQuery: String = "nwcys"
+        val page: Int = 1
+
+       // Mockito.`when`(repository.fetchPhotos(searchQuery, page)).thenReturn(getEmptyResponse())
+
+        // Trigger
+        val data = viewModel.fetchPhotos(searchQuery, page)
+        Assert.assertEquals(Status.SUCCESS, viewModel.getUsers().value?.status)
+    }
 
 }

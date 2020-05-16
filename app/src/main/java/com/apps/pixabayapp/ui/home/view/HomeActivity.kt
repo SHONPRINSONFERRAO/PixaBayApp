@@ -13,11 +13,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.apps.pixabayapp.MyApplication
 import com.apps.pixabayapp.R
-import com.apps.pixabayapp.data.api.ApiHelper
 import com.apps.pixabayapp.data.api.ApiService
 import com.apps.pixabayapp.data.model.DetailsData
 import com.apps.pixabayapp.data.model.ListOfPhotos
 import com.apps.pixabayapp.data.model.PhotoDataModel
+import com.apps.pixabayapp.data.repository.PicsRepository
 import com.apps.pixabayapp.ui.base.ViewModelFactory
 import com.apps.pixabayapp.ui.details.view.DetailsActivity
 import com.apps.pixabayapp.ui.home.adapter.PhotoAdapter
@@ -47,7 +47,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
         (application as MyApplication).getNetComponent().inject(this)
         setupViewModel()
         setupUI()
-        //setupObservers("apple")
+        setupObservers()
         setupSearch()
     }
 
@@ -56,6 +56,10 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
         search.setOnQueryTextListener(this)
         search.setQuery("apple", true)
         query = search.query.toString()
+    }
+
+    private fun fetchPhotos(query: String, page: Int) {
+        viewModel.fetchPhotos(query, page)
     }
 
     private fun setupUI() {
@@ -73,14 +77,15 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
                 val layoutManager = recyclerView.layoutManager as GridLayoutManager
                 val visibleItemCount: Int? =
                     layoutManager?.findLastCompletelyVisibleItemPosition() + 1
-                val totalItemCount: Int? = layoutManager?.itemCount
+                val totalItemCount: Int = layoutManager.itemCount
 
-                if (!isLoading && visibleItemCount == totalItemCount) {
+                if (!isLoading && visibleItemCount == totalItemCount && totalItemCount > 0) {
                     //Load more data
                     isLoading = true
                     page += 1
+                    photoView.scrollToPosition(totalItemCount - 1)
                     loaderBar.visibility = View.VISIBLE
-                    setupObservers(query, page)
+                    fetchPhotos(query, page)
                 }
             }
         })
@@ -89,13 +94,13 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
 
     private fun setupViewModel() {
         viewModel =
-            ViewModelProviders.of(this, ViewModelFactory(ApiHelper(apiService)))
+            ViewModelProviders.of(this, ViewModelFactory(PicsRepository(apiService)))
                 .get(HomeViewModel::class.java)
         Log.i("HomeACtivity", "Called ViewModelProviders.of")
     }
 
-    private fun setupObservers(query: String, page: Int) {
-        viewModel.getUsers(query, page).observe(this, Observer {
+    private fun setupObservers() {
+        viewModel.getUsers().observe(this, Observer {
             it?.let { resource ->
                 when (resource.status) {
                     Status.SUCCESS -> {
@@ -103,7 +108,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
                         isLoading = false
                         loaderBar.visibility = View.GONE
                         //progressBar.visibility = View.GONE
-                        resource.data?.let { users -> retrieveList(users) }
+                        resource.data?.let { photos -> retrieveList(photos) }
                     }
                     Status.ERROR -> {
                         photoView.visibility = View.VISIBLE
@@ -118,20 +123,28 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
                         //photoView.visibility = View.GONE
                     }
                     Status.CONTENT_ERROR -> {
-                        photoView.visibility = View.VISIBLE
-                        isLoading = false
-                        loaderBar.visibility = View.GONE
-                        Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                        showContentError(it.message)
                     }
                 }
             }
         })
     }
 
-    private fun retrieveList(users: PhotoDataModel) {
-        adapter.apply {
-            addUsers(users.hits)
-            notifyDataSetChanged()
+    private fun showContentError(it: String?) {
+        photoView.visibility = View.VISIBLE
+        isLoading = false
+        loaderBar.visibility = View.GONE
+        Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+    }
+
+    private fun retrieveList(photos: PhotoDataModel) {
+        if (photos.hits.size == 0) {
+            showContentError("No Content Found")
+        } else {
+            adapter.apply {
+                addUsers(photos.hits)
+                notifyDataSetChanged()
+            }
         }
     }
 
@@ -147,7 +160,7 @@ class HomeActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
             clearList()
             page = 1
             this.query = query
-            setupObservers(query!!, page)
+            fetchPhotos(query!!, page)
         }
         return false
     }
