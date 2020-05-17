@@ -1,6 +1,5 @@
 package com.apps.pixabayapp
 
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.apps.pixabayapp.data.api.ApiHelper
@@ -17,13 +16,15 @@ import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
+import java.lang.RuntimeException
 
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class HomeTest {
+class HomeTest : BaseTest() {
 
 
     private lateinit var viewModel: HomeViewModel
@@ -77,7 +78,7 @@ class HomeTest {
         val data = viewModel.fetchPhotos(searchQuery, page)
 
         // Validation
-        Mockito.verify(viewModel, Mockito.times(1)).fetchPhotos(searchQuery, page)
+        verify(viewModel, Mockito.times(1)).fetchPhotos(searchQuery, page)
     }
 
     @Test
@@ -90,12 +91,12 @@ class HomeTest {
 
 
         // Validation
-        Mockito.verify(viewModel, Mockito.times(1)).fetchPhotos(searchQuery, page)
+        verify(viewModel, Mockito.times(1)).fetchPhotos(searchQuery, page)
 
         //paginate
         viewModel.fetchPhotos(searchQuery, page)
         // Validation
-        Mockito.verify(viewModel, Mockito.times(2)).fetchPhotos(searchQuery, page)
+        verify(viewModel, Mockito.times(2)).fetchPhotos(searchQuery, page)
     }
 
     @Test
@@ -113,18 +114,7 @@ class HomeTest {
         val searchQuery: String = "apple"
         val page: Int = 1
 
-       // Mockito.`when`(repository.fetchPhotos(searchQuery, page)).thenReturn(getSuccessResponse())
-
-        /* val response =
-             Mockito.mock(Response::class.java)
-         val searchResponse: PhotoDataModel =
-             Mockito.mock<PhotoDataModel>(PhotoDataModel::class.java)
-         Mockito.doReturn(true).`when`(response).isSuccessful
-         Mockito.doReturn(searchResponse).`when`(response).body()*/
-
-        // Trigger
         val data = viewModel.fetchPhotos(searchQuery, page)
-        Log.i("data", data.toString())
         Assert.assertEquals(Status.SUCCESS, viewModel.getUsers().value?.status)
 
     }
@@ -134,11 +124,80 @@ class HomeTest {
         val searchQuery: String = "nwcys"
         val page: Int = 1
 
-       // Mockito.`when`(repository.fetchPhotos(searchQuery, page)).thenReturn(getEmptyResponse())
+        // Mockito.`when`(repository.fetchPhotos(searchQuery, page)).thenReturn(getEmptyResponse())
 
         // Trigger
         val data = viewModel.fetchPhotos(searchQuery, page)
         Assert.assertEquals(Status.SUCCESS, viewModel.getUsers().value?.status)
     }
+
+
+    @Test
+    fun test_PixaBay_Repos_observers_success() {
+        testCoroutineRule.runBlockingTest {
+            doReturn(PhotoDataModel())
+                .`when`(helper)
+                .fetchPhotos("", 1)
+            val viewModel = HomeViewModel(helper)
+            viewModel.fetchPhotos("", 1)
+            viewModel.getUsers().observeForever(apiUsersObserver)
+            verify(helper).fetchPhotos("", 1)
+            verify(apiUsersObserver).onChanged(Resource.success(PhotoDataModel()))
+            viewModel.getUsers().removeObserver(apiUsersObserver)
+        }
+    }
+
+    @Test
+    fun test_PixaBay_Repos_response_success() {
+        testCoroutineRule.runBlockingTest {
+            doReturn(getSuccessResponse())
+                .`when`(helper)
+                .fetchPhotos("", 1)
+            val viewModel = HomeViewModel(helper)
+            viewModel.fetchPhotos("", 1)
+            viewModel.getUsers().observeForever(apiUsersObserver)
+            verify(helper).fetchPhotos("", 1)
+            verify(apiUsersObserver).onChanged(Resource.success(getSuccessResponse()))
+            Assert.assertEquals(2, viewModel.getUsers().value?.data?.hits?.size)
+            viewModel.getUsers().removeObserver(apiUsersObserver)
+        }
+    }
+
+    @Test
+    fun test_PixaBay_Repos_response_empty() {
+        testCoroutineRule.runBlockingTest {
+            doReturn(getEmptyResponse())
+                .`when`(helper)
+                .fetchPhotos("", 1)
+            val viewModel = HomeViewModel(helper)
+            viewModel.fetchPhotos("", 1)
+            viewModel.getUsers().observeForever(apiUsersObserver)
+            verify(helper).fetchPhotos("", 1)
+            verify(apiUsersObserver).onChanged(Resource.success(getEmptyResponse()))
+            Assert.assertEquals(0, viewModel.getUsers().value?.data?.hits?.size)
+            viewModel.getUsers().removeObserver(apiUsersObserver)
+        }
+    }
+
+    /*@Test
+    fun test_PixaBay_Repos_response_exception() {
+        testCoroutineRule.runBlockingTest {
+            doThrow(RuntimeException("errorMessage"))
+                .`when`(helper)
+                .fetchPhotos("", 1)
+            val viewModel = HomeViewModel(helper)
+            viewModel.fetchPhotos("", 1)
+            viewModel.getUsers().observeForever(apiUsersObserver)
+            verify(helper).fetchPhotos("",1)
+            verify(apiUsersObserver).onChanged(
+                Resource.error(
+                    null,
+                    RuntimeException("errorMessage").toString()
+
+                )
+            )
+            viewModel.getUsers().removeObserver(apiUsersObserver)
+        }
+    }*/
 
 }

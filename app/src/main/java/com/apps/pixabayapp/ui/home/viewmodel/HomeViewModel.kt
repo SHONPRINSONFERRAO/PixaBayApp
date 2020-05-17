@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel(private val apiHelper: ApiHelper) : ViewModel() {
     init {
         Log.i("HomeViewModel", "HomeViewModel created!")
+        fetchPhotos("", 1)
     }
 
     override fun onCleared() {
@@ -26,7 +27,8 @@ class HomeViewModel(private val apiHelper: ApiHelper) : ViewModel() {
     fun fetchPhotos(query: String, page: Int) = viewModelScope.launch {
         photos.postValue(Resource.loading(data = null))
         try {
-            photos.postValue(Resource.success(data = apiHelper.fetchPhotos(query, page)))
+            val photosFromApi = apiHelper.fetchPhotos(query, page)
+            photos.postValue(Resource.success(photosFromApi))
         } catch (exception: Exception) {
             if (!MyApplication.hasNetwork()) {
                 photos.postValue(Resource.noContentFound(data = null, message = "No Content Found"))
